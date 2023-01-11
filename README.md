@@ -109,7 +109,7 @@ All these 4 must be true for a resource deadlock to occur.
     - Example: Process P1 is waiting for a message from process P2. Process P2 is waiting for a message from process P1.
     - This can be avoided by using timeouts.
 
-- <h3>LIVELOCK<h3> <a name="livelock"></a>
+- <h3>LIVELOCK</h3> <a name="livelock"></a>
 
     - A scenario where 2 processes are giving up resources to each other.
     - Example: Process P1 is giving up a resource R1 to process P2. Process P2 is giving up a resource R2 to process P1.
