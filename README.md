@@ -256,10 +256,12 @@ All these 4 must be true for a resource deadlock to occur.
 #### INTERRUPT VECTOR <a name="interrupt-vector"></a>
 
 - An interrupt vector is a table that contains the addresses of the interrupt service routines.
-    INTERRUTS <a name="interrupts"></a>
-        - An interrupt is an event that causes the processor to stop executing the current program and to execute an interrupt service routine.
-        - The interrupt service routine is a program that is executed when an interrupt occurs.
-        - The interrupt service routine is executed in the kernel mode.
+
+INTERRUPTS <a name="interrupts"></a>
+
+- An interrupt is an event that causes the processor to stop executing the current program and to execute an interrupt service routine.
+- The interrupt service routine is a program that is executed when an interrupt occurs.
+- The interrupt service routine is executed in the kernel mode.
 
 # THREADS <a name="threads"></a>
 
