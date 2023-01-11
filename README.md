@@ -78,20 +78,25 @@ All these 4 must be true for a resource deadlock to occur.
         - Example: Linux does not handle deadlock.
 
 -  <h3>DEADLOCK PREVENTION</h3> <a name="deadlock-prevention"></a>
+
     - Mutual Exclusion
         - Avoiding the condition where only one process can use a resource at a time.
         - Example: Having a daemon process that manages the printer and allows multiple processes to print at the same time. by using a queue for the print jobs.
+
     - Attacking the Hold and Wait condition
         - All processes must request all resources at once before they start executing.
         - Example: A process that needs to read a file and write to a file must request both the resources at once before it starts executing.
         - This is not practical because it is not known in advance which resources a process will need.
+
     - Attacking the No Preemption condition
         - Spooling printer output to a file and then printing the file and allowing only printer daemon to access the printer.
+
     - Attacking the Circular Wait condition
         - If one process is requesting more than 2 resources, it must request the resources in a fixed order.
         - Numbering the resources and requesting them in increasing order.
 
 - <h3>TWO-PHASE LOCKING</h3> <a name="two-phase-locking"></a>
+
     - A protocol for avoiding deadlock.
     - A process must acquire all the locks it needs in a fixed order.
     - Example: If a process needs to access a file and a database record, it must acquire the file lock first and then the database record lock.
@@ -99,17 +104,20 @@ All these 4 must be true for a resource deadlock to occur.
     - This is not practical because it is not known in advance which resources a process will need.
 
 - <h3>COMMUNICATION DEADLOCK</h3> <a name="communication-deadlock"></a>
+
     - A scenario where 2 processes are waiting for each other to send a message via a communication channel.
     - Example: Process P1 is waiting for a message from process P2. Process P2 is waiting for a message from process P1.
     - This can be avoided by using timeouts.
 
 - <h3>LIVELOCK<h3> <a name="livelock"></a>
+
     - A scenario where 2 processes are giving up resources to each other.
     - Example: Process P1 is giving up a resource R1 to process P2. Process P2 is giving up a resource R2 to process P1.
     - Like 2 people politely giving each other way on a road. will lead to no progress.
     - This can be avoided by using timeouts.
 
 - <h3>STARVATION</h3> <a name="starvation"></a>
+
     - Printer printing jobs in ascending order of file size, if a large file is submitted, it will be printed last.
     - This can read to starvation of larger files if small files are submitted frequently.
     - This can be avoided by using FIFO queue.
