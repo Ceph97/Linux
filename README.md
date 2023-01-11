@@ -7,7 +7,7 @@
     - [CONDITION FOR RESOURCE DEADLOCK](#condition-for-resource-deadlock)
     - [DEADLOCK HANDLING](#deadlock-handling)
 
-### DEADLOCK <a name="deadlock"></a>
+# DEADLOCK <a name="deadlock"></a>
 - A scenario where 2 processes are asking for resources that the other process has, and neither process is willing to give up the resource it has. This results in both processes waiting forever.
 
     - It can occur with 2 or more processes.
@@ -15,7 +15,7 @@
     - It can occur with file locking.
     - It is not limited to physical resources. It can occur with virtual software resources as well.
 
-- <h3>TYPES OF RESOURCES <a name="types-of-resources"></a></h3>
+- <h3>TYPES OF RESOURCES</h3> <a name="types-of-resources"></a>
 
     - Preemptive Resources
         - Resources that can be taken away from a process by the operating system to get out of a deadlock.
