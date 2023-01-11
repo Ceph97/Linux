@@ -15,7 +15,7 @@
     - It can occur with file locking.
     - It is not limited to physical resources. It can occur with virtual software resources as well.
 
-- TYPES OF RESOURCES <a name="types-of-resources"></a>
+- <h3>TYPES OF RESOURCES <a name="types-of-resources"></a></h3>
 
     - Preemptive Resources
         - Resources that can be taken away from a process by the operating system to get out of a deadlock.
