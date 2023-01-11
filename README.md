@@ -11,6 +11,8 @@
     - [COMMUNICATION DEADLOCK](#communication-deadlock)
     - [LIVELOCK](#livelock)
 
+- [PROCESSES AND THREADS](#processes-threads)
+
 # DEADLOCK <a name="deadlock"></a>
 - A scenario where 2 processes are asking for resources that the other process has, and neither process is willing to give up the resource it has. This results in both processes waiting forever.
 
@@ -121,5 +123,21 @@ All these 4 must be true for a resource deadlock to occur.
     - Printer printing jobs in ascending order of file size, if a large file is submitted, it will be printed last.
     - This can read to starvation of larger files if small files are submitted frequently.
     - This can be avoided by using FIFO queue.
+
+
+
+# PROCESSES AND THREADS <a name="processes-and-threads"></a>
+
+- A process is an instance of a program in execution. It is a program in execution.
+- A program is a set of instructions/algorithms that are stored on disk.
+- A thread is a unit of execution within a process. It is a light weight process.
+- CPU works on one process at a time and switches between processes within a second. Ths is called ```context switching``` and it gives an illusion of parallerism.
+- ```Multi-processor```: is a computer with more than one CPU.
+- ```Multi programming```: is the ability of a CPU to execute more than one process at a time.
+- ```Multi-core```: is a CPU with more than one core, common with new systems.
+- The rate at which a process or thread is executed is not reproducible if a rerun is done.
+
+
+
 
 
