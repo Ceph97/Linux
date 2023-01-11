@@ -12,6 +12,17 @@
     - [LIVELOCK](#livelock)
 
 - [PROCESSES AND THREADS](#processes-threads)
+    - [DAEMON PROCESS](#daemon-process)
+       - [CHILD PROCESS](#child-process)
+    - [PROCESS TERMINATION](#process-termination)
+    - [PROCESS STATES](#process-states)
+    - [IMPLEMENTATION OF PROCESSES](#implementation-of-processes)
+    - [INTERRUPT VECTORS](#interrupt-vectors)
+       - [INTERRUPTS](#interrupts)
+       
+- [THREADS](#threads)
+    
+
 
 # DEADLOCK <a name="deadlock"></a>
 - A scenario where 2 processes are asking for resources that the other process has, and neither process is willing to give up the resource it has. This results in both processes waiting forever.
@@ -136,6 +147,123 @@ All these 4 must be true for a resource deadlock to occur.
 - ```Multi programming```: is the ability of a CPU to execute more than one process at a time.
 - ```Multi-core```: is a CPU with more than one core, common with new systems.
 - The rate at which a process or thread is executed is not reproducible if a rerun is done.
+
+#### DAEMON PROCESS <a name="daemon-process"></a>
+
+- A process that runs in the background and provides services to other processes. for example: a process that manages the printer, a process that manages the disk, a process that manages the network.
+- A daemon process is started by the operating system when the system boots up.
+
+#### FORK <a name="fork"></a>
+
+- A process can create a new process by calling the ```fork()``` system call.
+- The ```fork()``` system call creates a new process by duplicating the calling process.
+- The new process is called the child process.
+- The calling process is called the parent process.
+
+
+    CHILD PROCESS <a name="child-process"></a>
+
+    - The child process is an exact copy of the parent process.
+    - The child process has its own writtable memory space, file descriptors, and other resources.
+    - fork() creates a child process that differs from the parent process only in its PID and PPID, and in the fact that resource utilizations are set to 0. File locks and pending signals are not inherited.
+    - The child process has its own process ID. but it has the same parent process ID as the parent process.
+    - The child process has its own stack, but it has the same code and data segments as the parent process.
+    - Under Linux, fork() is implemented using copy-on-write pages, so the only penalty that it incurs is the time and memory required to duplicate the parent’s page tables, and to create a unique task structure for the child.
+
+    - The ```fork()``` system call returns 2 values:
+        - 0 to the child process.
+        - The process ID of the child process to the parent process.
+        - On failure, a -1 will be returned in the parent’s context, no child process will be created, and errno will be set appropriately.
+    
+#### PROCESS TERMINATION <a name="process-termination"></a>
+
+- Normal termination
+    - The process calls the ```exit()``` system call.
+    - The process calls the ```_exit()``` system call.
+    - The process returns from the ```main()``` function.
+- Error exit(voluntary)
+    - Bad input from user.
+    - The process calls the ```exit()``` system call.
+    - The process returns from the ```main()``` function.
+- Fatal Error
+    - The process calls the ```abort()``` system call.
+    - The process calls the ```_exit()``` system call.
+    - The process returns from the ```main()``` function.
+
+- Killed by another process
+    - The process calls the ```kill()``` system call.
+    - The process calls the ```abort()``` system call.
+    - The process calls the ```_exit()``` system call.
+    - The process returns from the ```main()``` function.
+
+- If a parent is killed, all forked children are not killed. They become orphan processes.
+- The orphan processes are adopted by the init process.
+- The init process is the first process that is started by the kernel when the system boots up.
+- The init process is the parent of all orphan processes.
+- The init process checks periodically for new children, and waits for them (thus freeing resources that are allocated by their return value).
+
+#### PROCESS HIERARCHY <a name="process-hierarchy"></a>
+
+- The process hierarchy is a tree structure.
+- The root of the tree is the init process.
+- The init process is the parent of all processes.
+
+#### PROCESS STATES <a name="process-states"></a>
+
+- A process can be in one of the following states:
+    - Running:
+        - The process is currently execution.
+    - Ready:
+        - The process is waiting to be executed.
+        - Example: The process is waiting for the CPU to be free.
+    - Blocked:
+        - The process is waiting for an event to occur.
+        - Example: The process is waiting for a disk read to complete.
+        - This can not run even if the CPU is free/iddle.
+        - When a process is reading a pipe, and the pipe is empty, the process is blocked.
+
+#### IMPLEMENTATION OF PROCESSES <a name="implementation-of-processes"></a>
+
+- [Difference between PCB and Process Table](https://gateoverflow.in/90236/difference-between-process-table-and-pcb)
+- OS maintains a table/Data structure called ```PROCESS TABLE``` which is an array, and each entry in a proces table can be considered as ```PCB's```.
+- The process is implemented using a data structure called the ```PCB``` which is maintained by the process itself.
+- PCB stands for ```Process Control Block```
+- A process control block (pcb) contains information about the process, I.e. registers, quantum, priority, etc. The process table is an array of pcb's.
+- The PCB contains the following information:
+    - Process ID;
+        - The process ID is a unique number that is assigned to a process by the operating system.
+    - Process state;
+        - The process state is the state of the process, I.e. running, ready, blocked, etc.
+    - Program counter;
+        - The program counter is the address of the next instruction to be executed.
+    - CPU registers;
+        - The CPU registers are the CPU registers that are used by the process.
+    - CPU scheduling information;
+        - The CPU scheduling information is the information that is used by the CPU scheduler to schedule the process.
+    - Memory management information;
+        - The memory management information is the information that is used by the memory manager to manage the memory that is used by the process.
+    - Accounting information;
+        - The accounting information is the information that is used by the accounting system to account for the resources that are used by the process.
+    - I/O status information;
+        - The I/O status information is the information that is used by the I/O system to manage the I/O devices that are used by the process.
+
+#### INTERRUPT VECTOR <a name="interrupt-vector"></a>
+- An interrupt vector is a table that contains the addresses of the interrupt service routines.
+    INTERRUTS <a name="interrupts"></a>
+        - An interrupt is an event that causes the processor to stop executing the current program and to execute an interrupt service routine.
+        - The interrupt service routine is a program that is executed when an interrupt occurs.
+        - The interrupt service routine is executed in the kernel mode.
+
+# THREADS <a name="threads"></a>
+
+
+
+
+
+    
+
+
+
 
 
 
