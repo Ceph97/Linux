@@ -19,8 +19,14 @@
     - [IMPLEMENTATION OF PROCESSES](#implementation-of-processes)
     - [INTERRUPT VECTORS](#interrupt-vectors)
        - [INTERRUPTS](#interrupts)
-       
+
 - [THREADS](#threads)
+    - [FINITE STATE MACHINE](#finite-state-machine)
+    - [MULTI-THREADING](#multi-threading)
+    - [CONS OF MULTI-THREADS](#cons-of-multi-threading)
+    - [THREAD STATES](#thread-states)
+    - [POSIX THREADS](#posix-threads)
+
     
 
 
@@ -248,6 +254,7 @@ All these 4 must be true for a resource deadlock to occur.
         - The I/O status information is the information that is used by the I/O system to manage the I/O devices that are used by the process.
 
 #### INTERRUPT VECTOR <a name="interrupt-vector"></a>
+
 - An interrupt vector is a table that contains the addresses of the interrupt service routines.
     INTERRUTS <a name="interrupts"></a>
         - An interrupt is an event that causes the processor to stop executing the current program and to execute an interrupt service routine.
@@ -255,6 +262,68 @@ All these 4 must be true for a resource deadlock to occur.
         - The interrupt service routine is executed in the kernel mode.
 
 # THREADS <a name="threads"></a>
+
+- A thread is a small set of instructions designed to be scheduled and executed by the CPU independently of the parent process. 
+- A thread is a lightweight process. Hence easier to create and destroy.
+- For example, a program may have an open thread waiting for a specific event to occur or running a separate job, allowing the main program to perform other tasks.
+- If a program was single-threaded, it would have to wait for the event to occur before it could continue. blocking system calls like ```read()``` and ```write()``` would not be possible to run in parallel.
+
+Process vs Thread
+    - A process is a program in execution.
+    - A thread is a subset of a process. somewhat like a light weight process.
+
+#### FINITE STATE MACHINE <a name="finite-state-machine"></a>
+
+- A finite state machine is a model of computation that can be in exactly one of a finite number of states at any given time.
+- The state machine can change from one state to another in response to some external inputs.
+- Example: A vending machine can be in one of the following states:
+    - Idle
+    - Waiting for money
+    - Waiting for selection
+    - Waiting for change
+    - Dispensing product
+    - Dispensing change
+
+<h3>MULTI-THREADING</h3> <a name="multi-threading"></a>
+
+- Multi-threading is the ability of a process to execute multiple threads simultaneously.
+- Threads take advantage of the fact that the CPU can switch between threads very quickly, giving the illusion that the threads are executing simultaneously.
+- Threads are used to implement multitasking in a program.
+
+<h4> CONS OF MULTI-THREADING </h4> <a name="cons-of-multi-threading"></a>
+
+- No protection between threads as they share the same address space. Hence one, thread can modify, erase, write another thread's stack.
+
+- Issues can arise if one thread is closing a file, and another thread is reading from the same file.
+
+#### THREAD STATES <a name="thread-states"></a>
+
+- Like a process a thread can also be in one of the following states:
+    - Running
+    - Ready
+    - Blocked
+    - Terminated
+
+- Each thread has its own stack, but all threads share the same code and data segments.
+
+- Process usually starts with one thread, this thread has the ability to create/launch more threads per need using the following system calls:
+   
+    - ```thread_create()```: Creates a new thread.
+    - ```thread_exit()```: Terminates the current thread.
+    - ```thread_join()```: Waits for a thread to terminate.
+    - ```thread_yield()```: Yields the CPU to another thread.
+
+#### POSIX THREADS <a name="posix-threads"></a>
+- POSIX threads are a standard for multi-threading in the UNIX operating system.
+- POSIX threads are implemented using the following system calls:
+    - ```pthread_create()```: Creates a new thread.
+    - ```pthread_exit()```: Terminates the current thread.
+    - ```pthread_join()```: Waits for a thread to terminate.
+    - ```pthread_yield()```: Yields the CPU to another thread.
+
+#### IMPLEMENTATION OF THREADS <a name="implementation-of-threads"></a>
+
+
 
 
 
