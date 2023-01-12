@@ -1,4 +1,4 @@
-## Linux
+# Linux Operating System
 
 ##### Table of Contents  
 
@@ -26,6 +26,16 @@
     - [CONS OF MULTI-THREADS](#cons-of-multi-threading)
     - [THREAD STATES](#thread-states)
     - [POSIX THREADS](#posix-threads)
+    - [IMPLEMENTATION OF THREADS](#implementation-of-threads)
+        - [USER LEVEL THREADS](#user-level-threads)
+        - [KERNEL LEVEL THREADS](#kernel-level-threads)
+        - [HYBRID THREADS](#hybrid-threads)
+        - [POP-UP THREADS](#pop-up-threads)
+        - [UPCALLS AND DOWNCALLS](#upcalls-downcalls)
+        - [STACK MANAGEMENT](#stack-management)
+
+- [INTERPROCESS COMMUNICATION](#interprocess-communication)
+
 
     
 
@@ -325,8 +335,118 @@ Process vs Thread
 
 #### IMPLEMENTATION OF THREADS <a name="implementation-of-threads"></a>
 
+- <h4>USER SPACE THREADS</h4> <a name="user-space-threads"></a>
+    - The threads are implemented in the user space and the kernel is not aware of the threads.
+    - Each process has its own thread table, which contains the information about the threads that are created by the process.
+    - The thread table is an array of thread control blocks (TCB).
+    - The TCB contains the following information:
+        - Thread ID;
+            - The thread ID is a unique number that is assigned to a thread by the operating system.
+        - Thread state;
+            - The thread state is the state of the thread, I.e. running, ready, blocked, etc.
+        - Thread priority;
+            - The thread priority is the priority of the thread over other threads.
+        - CPU registers;
+            - The CPU registers are the CPU registers that are used by the thread.
+        - CPU scheduling information;
+        - Pointer to process that created the thread;
+        - Pointer to other threads that were created by this thread;
+    - The context switch is done by the runtime procedure.
+    - It allows custom scheduling algorithms to be implemented.
+    - Process can have own garbage collector.
+
+    - Disadvantages;
+        - Blocking system calls like ```read()``` and ```write()``` cannot be executed in parallel as the kernel is not aware of the threads, it only sees the process.
+        - lack of cordination between kernel and user space.
+        - OS can make poor decisions like:
+            - scheduling a process with idle threads
+            - blocking a process due to a blocking thread even though the process has other threads that can run
+            - Giving a process as a whole one time slice irrespective of whether the process has 1 or 1000 threads
+            - unschedule a process with a thread holding a lock.
 
 
+
+    
+
+- <h4>KERNEL SPACE THREADS</h4> <a name="kernel-space-threads"></a>
+
+    - The threads are implemented in the kernel space and the kernel is aware of the threads.
+    - The kernel maintains a thread table that contains the information about all the threads that are created by all the processes in the system.
+    - Thread re-cycle is possible.
+        - When a thread terminates, the kernel can re-use the thread ID of the terminated thread for a new thread.
+        - It is also possible to re-cycle user space threads, however there is no point in doing so as processes only manage a small number of threads.
+    
+    - Disadvantages;
+        - Signals
+
+- <h4>HYBRID THREADS </h4> <a name="hybrid-threads"></a>
+
+    - Hybrid threads are a combination of user space threads and kernel space threads.
+    - The kernel is aware of the threads that are created in kernel space only.
+    - This offers the advantages of both user space threads and kernel space threads.
+    - Critical section of the code is executed in kernel space, while the rest of the code is executed in user space.
+
+- <h4>POP UP THREADS </h4> <a name="pop-up-threads"></a>
+
+    - In a distributed system, a new thread can be created on to handle incoming messages.
+    - The thread is created when a message is received and is destroyed when the message is processed.
+    - Since they are brand new they have no history,registers,stacks,etc.
+    - In simpler terms, Pop-up threads is just an academic terms for multithreaded server in which every incoming requests will be handled by a separate thread.
+    - This separate thread can be one that newly created or can be the one that reused from existing threads. The mechanism is handled by a Thread Pool.
+
+**UPCALLS AND DOWNCALLS** <a name="upcalls-and-downcalls"></a>
+
+- ***Upcalls:*** 
+    - Are the calls made from the kernel to the user space.
+    - An upcall is a mechanism that allows the kernel to execute a function
+      in userspace, and potentially be returned information as a result.
+    - An upcall is like a signal, except that the kernel may use it at any
+      time, for any purpose, including in an interrupt handler.
+    - [Upcalls in Linux](https://lkml.iu.edu/hypermail/linux/kernel/9809.3/0922.html)
+
+- ***Downcalls:***
+    - Are the calls made from the user space to the kernel.
+    - A downcall is a mechanism that allows userspace to execute a function
+      in the kernel, and potentially be returned information as a result.<br>
+      
+
+| **Upcall** | **Downcall** |
+|------------|--------------|
+| Kernel to user space | User space to kernel |
+| Kernel can call at any time | User space can call at any time |
+| Unprivileged code enters user mode | privileged code enters kernel mode |
+| Implemented using IPC | Implemented via TRAP |
+| Implemented using signals | Implemented using system calls |
+
+**STACK MANAGEMENT** <a name="stack-management"></a>
+
+- The stack is a region of memory that is used to store the local variables of a function.
+- The stack is a LIFO (Last In First Out) data structure.
+- If process runs out of stack space, the system will assign more stack space to the process.
+- If a process is multi-threaded, each thread has its own stack.
+- The flip side if multi-threaded process runs out of stack space, the system will assign more stack space to the process, but only to the thread that is running out of stack space.
+
+<h4> INTERPROCESS COMMUNICATION </h4> <a name="interprocess-communication"></a>
+
+- Interprocess communication (IPC) is the mechanism that allows processes to communicate with each other.
+
+**ISSUES WITH IPC** <a name="issues-with-ipc"></a>
+- Race conditions:
+    - If two processes are accessing the same resource, then the result of the operation depends on the order in which the processes access the resource.
+
+**CRITICAL SECTION/REGION** <a name="critical-section"></a>
+
+- A critical section/region is a section of code where processes will ultimately access a shared resource.
+- The critical section/region must be protected from other processes. To have a good solution, the following conditions must be met:
+    - Mutual exclusion: Only one process can be in the critical section at a time.
+    - Progress: If no process is in the critical section, then a process that wants to enter the critical section will eventually be able to do so.
+    - Bounded waiting: If a process wants to enter the critical section, then it will eventually enter the critical section.
+
+
+
+
+
+    
 
 
 
