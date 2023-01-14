@@ -443,7 +443,113 @@ Process vs Thread
     - Bounded waiting: If a process wants to enter the critical section, then it will eventually enter the critical section.
 
 **PROCESS DESCRIPTORS IN LINUX** <a name="process-descriptors"></a>
-- 
+
+- In Linux, a process descriptor is an instance of type struct ```task_struct``` defined in ```<linux/sched.h>```. 
+
+- It is one of the central data structures, and contains all the attributes, identification details, and resource allocation entries that a process holds. Looking at struct task_struct is like a peek into the window of what the kernel sees or works with to manage and schedule a process.
+
+- Refer to the [Process descriptors](https://subscription.packtpub.com/book/application-development/9781785883057/1/ch01lvl1sec9/process-descriptors) for more information.
+
+***CONTENTS OF PROCESS DESCRIPTOR*** <a name="contents-of-process-descriptor"></a>
+
+1. **PROCESS ATTRIBUTES**
+
+    - **PID**:
+
+        - The process ID of the process.
+        - This field contains a unique process identifier referred to as PID. PIDs in Linux are of the type ```pid_t ```(integer). 
+        - Though a PID is an integer, the default ***maximum number PIDs*** is ```32,768``` specified through the ```/proc/sys/kernel/pid_max interface```.
+        - The value in this file can be set to any value up to 2^22 (PID_MAX_LIMIT, approximately 4 million).
+        - To manage PIDs, the kernel uses a bitmap. This bitmap allows the kernel to keep track of PIDs in use and assign a unique PID for new processes.
+        - Bits with value 1 in the bitmap indicate that the corresponding PIDs are in use, and those with value 0 indicate free PIDs.
+        - Whenever the kernel needs to assign a unique PID, it looks for the first unset bit and sets it to 1, and conversely to free a PID, it toggles the corresponding bit from 1 to 0.
+
+    - **tgid**:
+
+        - The thread group ID of the process.
+        - This field contains the thread group ID (tgid) of the process. 
+        -  let's say when a new process is created, its ```PID``` and ```TGID``` are the same, as the process happens to be the only thread
+        - When the process spawns a new thread, the new child gets a unique PID but inherits the TGID from the parent, as it belongs to the same thread group.
+        - The tgid is also used to identify the process that created the thread group.
+        - The TGID is primarily used to support multi-threaded process. We will delve into further details in the threads section of this chapter.
+    
+    - **state**:
+        - A process right from the time it is spawned until it exits may exist in various states, referred to as process states--they define the process’s current state:
+
+2. **PROCESS RELATIONS**
+
+    Every process can be related to a parent process, establishing a parent-child relationship. Similarly, multiple processes spawned by the same process are called siblings. These fields establish how the current process relates to another process.
+
+    - **real_parent and parent**
+        - These are pointers to the parent's task structure. For a normal process, both these pointers refer to the same ```task_struct```; they only differ for multi-thread processes, implemented using posix threads. 
+        - For such cases, **real_parent** refers to the parent thread task structure and parent refers the process task structure to which SIGCHLD is delivered.
+    - **children**
+        - This is a pointer to a list of child task structures.
+    - **sibling**
+        - This is a pointer to the sibling task structure.
+    - **group_leader**
+        - This is a pointer to the task structure of the process that created the thread group.
+
+3. **SCEDULING ATTRIBUTES**
+    All contending processes must be given fair CPU time, and this calls for scheduling based on time slices and process priorities. 
+    
+    These attributes contain necessary information that the scheduler uses when deciding on which process gets priority when contending.
+
+4. **FILE DESCRIPTOR TABLE**
+
+    During the lifetime of a process, it may access various resource files to get its task done. 
+    
+    This results in the process opening, closing, reading, and writing to these files. The system must keep track of these activities; 
+    
+    file descriptor elements help the system know which files the process holds.
+    
+    - **files**
+        - The file descriptor table contains pointers to all the files that a process opens to perform various operations. The files field contains a pointer, which points to this file descriptor table.
+
+    - **fs**
+        - Filesystem information is stored in this field.
+
+5. **SIGNAL DESCRIPTOR**
+
+    For processes to handle signals, the task structure has various elements that determine how the signals must be handled.
+
+    - **signal**
+       - This is of type struct ```signal_struct```, which contains information on all the signals associated with the process.
+    - **sighand**
+         - This is of type struct ```sighand_struct```, which contains information on how the signals must be handled by the process.
+    - **sigset_t blocked, real_blocked**
+          - These elements identify signals that are currently masked or blocked by the process.
+    - **pending**
+          - This is of type struct ```sigpending```, which identifies signals which are generated but not yet delivered.
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
