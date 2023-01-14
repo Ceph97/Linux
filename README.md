@@ -448,7 +448,9 @@ Process vs Thread
 
 - It is one of the central data structures, and contains all the attributes, identification details, and resource allocation entries that a process holds. Looking at struct task_struct is like a peek into the window of what the kernel sees or works with to manage and schedule a process.
 
+REFERENCES:
 - Refer to the [Process descriptors](https://subscription.packtpub.com/book/application-development/9781785883057/1/ch01lvl1sec9/process-descriptors) for more information.
+- [/proc directory](https://man7.org/linux/man-pages/man5/proc.5.html)
 
 ***CONTENTS OF PROCESS DESCRIPTOR*** <a name="contents-of-process-descriptor"></a>
 
@@ -522,6 +524,72 @@ Process vs Thread
     - **pending**
           - This is of type struct ```sigpending```, which identifies signals which are generated but not yet delivered.
     
+**LINUX BOOT PROCESS** <a name="linux-boot-process"></a>
+
+ 1. **BIOS**
+
+    - It is a set of routines that are stored in a ROM chip on the motherboard. 
+    - When you first turn on your computer, the BIOS first performs some integrity checks of the HDD or SSD. It also performs a POST (Power On Self Test) to make sure that all the hardware components are working properly.
+    - Then, the BIOS searches for, loads, and executes the **boot loader program**, which can be found in the **Master Boot Record (MBR)**. The MBR is sometimes on a USB stick or CD-ROM such as with a live installation of Linux.
+    - Once the boot loader program is detected, it's then loaded into memory and the BIOS gives control of the system to it.
+
+ 2. **MBR (Stage 1 Boot loader)**
+
+    - MBR stands for Master Boot Record, and is responsible for loading and executing the GRUB boot loader.
+    - The MBR is located in the 1st sector of the bootable disk, which is typically ```/dev/hda```, or ```/dev/sda```, depending on your hardware. The MBR also contains information about GRUB, or LILO in very old systems.
+    - The MBR is a small program that is loaded into memory and executed by the BIOS. It is responsible for loading the GRUB boot loader into memory and giving control of the system to it.
+        - This contain Mastr Boot Record code is around 512 bytes long.
+    - MBR does not have enough space to load the entire GRUB boot loader, so it loads only the first stage of the boot loader, which is called stage 1.
+
+ 3. **GRUB (Stage 2 Boot loaded)**
+
+    - ***GRUB*** stands for ***GRand Unified Bootloader***, and is responsible for loading the Linux kernel into memory and giving control of the system to it.
+    - The GRUB splash screen is often the first thing you see when you boot your computer. It has a simple menu where you can select some options. If you have multiple kernel images installed, you can use your keyboard to select the one you want your system to boot with. By default, the latest kernel image is selected.
+    - The splash screen will wait a few seconds for you to select and option. If you don't, it will load the default kernel image.
+    - In many systems you can find the GRUB configuration file at ```/boot/grub/grub.conf``` or ```/etc/grub.conf.``` Here's an example of a simple grub.conf file:
+
+    ```shell
+    #boot=/dev/sda
+    default=0
+    timeout=5
+    splashimage=(hd0,0)/boot/grub/splash.xpm.gz
+    hiddenmenu
+    title CentOS (2.6.18-194.el5PAE)
+      root (hd0,0)
+      kernel /boot/vmlinuz-2.6.18-194.el5PAE ro root=LABEL=/
+      initrd /boot/initrd-2.6.18-194.el5PAE.img
+    ```
+
+ 4. **KERNEL PHASE**
+
+   - The kernel is often referred to as the core of any operating system, Linux included. It has complete control over everything in your system.
+   - In this stage of the boot process, the kernel that was selected by GRUB first mounts the root file system that's specified in the ```grub.conf``` file. Then it executes the ```/sbin/init``` program, which is always the first program to be executed. ***You can confirm this with its process id (PID), which should always be 1.***
+   - The kernel then establishes a temporary root file system using Initial RAM Disk (initrd) until the real file system is mounted.
+
+ 5. **INIT PHASE**
+ 
+   - At this point, your system executes runlevel programs. At one point it would look for an init file, usually found at ```/etc/inittab``` to decide the Linux run level.
+   - Modern Linux systems use ```systemd``` to choose a run level instead. According to TecMint, these are the available run levels:
+        - ```0``` - Halt 
+        - ```1``` - Single User text Mode
+        - ```2``` - Not used, can be user defined
+        - ```3``` - Multi-User Mode
+        - ```4``` - Not used, can be user defined
+        - ```5``` - Graphical Mode
+        - ```6``` - Reboot
+
+
+
+
+
+
+    
+
+
+
+
+
+
 
 
 
