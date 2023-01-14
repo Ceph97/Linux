@@ -36,6 +36,11 @@
 
 - [INTERPROCESS COMMUNICATION](#interprocess-communication)
 
+- [LINUX PROCESS DESCRIPTOR](#process-descriptors)
+    - [CONTENTS OF PROCESS DESCRIPTOR](#contents-of-process-descriptor)
+
+- [LINUX BOOT PROCESS](#linux-boot-process)
+
 
     
 
@@ -567,7 +572,7 @@ REFERENCES:
    - The kernel then establishes a temporary root file system using Initial RAM Disk (initrd) until the real file system is mounted.
 
  5. **INIT PHASE**
- 
+
    - At this point, your system executes runlevel programs. At one point it would look for an init file, usually found at ```/etc/inittab``` to decide the Linux run level.
    - Modern Linux systems use ```systemd``` to choose a run level instead. According to TecMint, these are the available run levels:
         - ```0``` - Halt 
