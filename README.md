@@ -442,6 +442,9 @@ Process vs Thread
     - Progress: If no process is in the critical section, then a process that wants to enter the critical section will eventually be able to do so.
     - Bounded waiting: If a process wants to enter the critical section, then it will eventually enter the critical section.
 
+**PROCESS DESCRIPTORS IN LINUX** <a name="process-descriptors"></a>
+- 
+
 
 
 
